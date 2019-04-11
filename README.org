@@ -1,0 +1,18 @@
+* Portfolio
+
+Create custom indices, monitor stock data, and generate custom analyses and visualizations.
+
+* Dependencies
+- wallstreet (altered version that adds metrics to be recorded)
+- pandas
+
+* Installation
+
+wallstreet is available on pyPi, and can be installed by
+
+#+BEGIN_SRC bash
+pip install wallstreet
+#+END_SRC
+   
+* Features / Examples
+- (Fill in later)
