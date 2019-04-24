@@ -2,13 +2,11 @@
 
 # Global imports
 import pandas as pd
-
-# Then relative imports
-from wallstreet import Stock
+import fix_yahoo_finance as yf
 
 
 s_name = 'MSFT'
-s = Stock(s_name)
+s = yf.Ticker(s_name)
 
 
 # Dummy classes for Indices and Portfolios. Will fill in later
@@ -19,16 +17,20 @@ class Index:
         self.tick_items = []
     
     def add_company(self, ticker):
-        s = Stock(ticker)
+        s = yf.Ticker(ticker)
         self.tick_items.append(s)
     
     def remove_company(self, ticker):
-        s = Stock(ticker)
+        s = yf.Ticker(ticker)
         self.tick_items.remove(s)
 
 class Portfolio:
     pass
 
+class WatchList(Index):
+    # Will fill in later
+    # Contains all tickers to watch on daily basis, regardless if they are currently owned.
+    pass
 
 def build_index(name, companies=None):
     ''' Create custom Index object to store stock information
