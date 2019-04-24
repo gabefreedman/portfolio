@@ -3,15 +3,14 @@
 Create custom indices, monitor stock data, and generate custom analyses and visualizations.
 
 * Dependencies
-- wallstreet (altered version that adds metrics to be recorded)
-- pandas
+- fix-yahoo-finance
 
 * Installation
 
-wallstreet is available on pyPi, and can be installed by
+fix-yahoo-finance is available on pyPi, and can be installed by
 
 #+BEGIN_SRC bash
-pip install wallstreet
+pip install fix-yahoo-finance
 #+END_SRC
    
 * Features / Examples
