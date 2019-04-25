@@ -3,14 +3,14 @@
 Create custom indices, monitor stock data, and generate custom analyses and visualizations.
 
 * Dependencies
-- fix-yahoo-finance
+- fix_yahoo_finance (Compatibility with updated Yahoo Finance API)
 
 * Installation
 
 fix-yahoo-finance is available on pyPi, and can be installed by
 
 #+BEGIN_SRC bash
-pip install fix-yahoo-finance
+pip install fix_yahoo_finance --upgrade --no-cache-dir
 #+END_SRC
    
 * Features / Examples
