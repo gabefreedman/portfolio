@@ -14,15 +14,29 @@ s = yf.Ticker(s_name)
 class Index:
     def __init__(self, name):
         self.name = name
-        self.tick_items = []
+        self.tick_items = {}
     
     def add_company(self, ticker):
         s = yf.Ticker(ticker)
-        self.tick_items.append(s)
+        self.tick_items[ticker] = s
     
     def remove_company(self, ticker):
-        s = yf.Ticker(ticker)
-        self.tick_items.remove(s)
+        self.tick_items.pop(ticker)
+    
+    def index_metadata(self):
+        metadata = {k: v.info for k, v in self.tick_items.items()}
+        return metadata
+    
+    def main_metrics_table(self):
+        columns = ['marketCap', 'forwardPE', 'trailingPE',
+                   'trailingAnnualDividendRate',
+                   'regularMarketDayRange', 'fiftyTwoWeekRange',
+                   'fiftyDayAverage', 'fiftyDayAverageChangePercent',
+                   'twoHundredDayAverage', 'twoHundredDayAverageChangePercent']
+        metadata = self.index_metadata()
+        df = pd.DataFrame(metadata).T
+        df = df[columns]
+        df.to_csv('daily_financial_metrics.csv')
 
 class Portfolio:
     pass
