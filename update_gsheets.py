@@ -21,3 +21,38 @@ for i, cell in enumerate(cell_list):
     cell.value = 'Test_' + str(i+1)
 
 worksheet.update_cells(cell_list)
+
+
+start_row = 3
+start_col = 'B'
+
+def get_cell_range(df):
+    
+    cols = len(df.columns)
+    rows = len(df)
+    
+    cell_range = '{}{}:{}{}'.format(start_col, start_row,
+                                    cell_end_col(cols), cell_end_row(rows))
+    return cell_range
+
+def cell_end_row(rows):
+    new_row = start_row + rows
+    return new_row
+
+def cell_end_col(cols):
+    new_col = ''
+    
+    if (ord(start_col)+cols) > 90:
+        new_col += 'A'
+        cols = cols-26
+    
+    charnum = ord(start_col)+cols
+    new_col += chr(charnum)
+    
+    return new_col
+    
+class CellRange:
+    
+    def __init__(self, start_col='B', start_row=3):
+        self.start_col = start_col
+        self.start_row = start_row
