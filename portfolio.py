@@ -37,6 +37,7 @@ class Index:
         df = pd.DataFrame(metadata).T
         df = df[columns]
         df.to_csv('daily_financial_metrics.csv')
+        return df
 
 class Portfolio:
     pass
