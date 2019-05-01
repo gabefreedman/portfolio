@@ -28,7 +28,8 @@ class Index:
         return metadata
     
     def main_metrics_table(self):
-        columns = ['marketCap', 'forwardPE', 'trailingPE',
+        columns = ['shortName', 'marketCap',
+                   'forwardPE', 'trailingPE',
                    'trailingAnnualDividendRate',
                    'regularMarketDayRange', 'fiftyTwoWeekRange',
                    'fiftyDayAverage', 'fiftyDayAverageChangePercent',
@@ -36,6 +37,7 @@ class Index:
         metadata = self.index_metadata()
         df = pd.DataFrame(metadata).T
         df = df[columns]
+        df = df.set_index('shortName')
         df.to_csv('daily_financial_metrics.csv')
         return df
 
