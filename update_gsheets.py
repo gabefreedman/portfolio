@@ -15,13 +15,11 @@ client = gspread.authorize(credentials)
 
 worksheet = client.open('Index Tracking').sheet1
 
-# cell_list = worksheet.range('C7:H14')
-'''
-for i, cell in enumerate(cell_list):
-    cell.value = 'Test_' + str(i+2)
-
-worksheet.update_cells(cell_list)
-'''
+def write_to_gsheets(cell_range, data):
+    cell_list = worksheet.range(cell_range)
+    for i, cell in enumerate(cell_list):
+        cell.value = data[i]
+    worksheet.update_cells(cell_list)
 
 def get_cell_range(rows, cols, start_row=3, start_col='C'):
     
@@ -34,7 +32,7 @@ def get_cell_range(rows, cols, start_row=3, start_col='C'):
 
 def cell_end_row(rows, start_row=3):
     new_row = start_row + rows
-    return new_row
+    return new_row - 1
 
 def cell_end_col(cols, start_col='C'):
     new_col = ''
@@ -43,49 +41,42 @@ def cell_end_col(cols, start_col='C'):
         new_col += 'A'
         cols = cols-26
     
-    charnum = ord(start_col)+cols
+    charnum = ord(start_col) + cols - 1
     new_col += chr(charnum)
     
     return new_col
     
-class CellRange:
+class Table:
     
-    def __init__(self, df, start_col='C', start_row=3):
-        self.data_table = df
-        self.num_cols = len(df.columns)-1
-        self.num_rows = len(df)
+    def __init__(self, df, start_row=3, start_col='C'):
+        self.row_names = df.index
+        self.col_names = df.columns
+        self.flat_data = [str(item) for row in df.values.tolist() for item in row]
+        self.start_row = start_row
         self.start_col = start_col
-        self.header_row = start_row
-        self.column_name_range = get_cell_range(0, self.num_cols, self.header_row, self.start_col)
-        self.data_range = get_cell_range(self.num_rows-1, self.num_cols, self.header_row+1, self.start_col)
-        
-    def write_column_names(self):
-        cell_list = worksheet.range(self.column_name_range)
-        for i, cell in enumerate(cell_list):
-            cell.value = self.data_table.columns[i]
-        worksheet.update_cells(cell_list)
     
-    def write_row_names(self):
+    def get_row_cells(self):
+        num_rows = len(self.row_names)
+        index_col = cell_end_col(0, self.start_col)
         
+        cells = get_cell_range(num_rows, 1, self.start_row+1, index_col)
+        return cells
     
-    def write_data(self):
-        cell_list = worksheet.range(self.data_range)
-        flat_data = []
+    def get_col_cells(self):
+        num_cols = len(self.col_names)
         
-        for row in self.data_table.itertuples():
-            flat_data.append(row[1:])
-        
-        full_data = []
-        for item in flat_data:
-            for i, j in enumerate(item):
-                full_data.append(j)
-        full_data = [str(x) for x in full_data]
-        for i, cell in enumerate(cell_list):
-            cell.value = full_data[i]
-        worksheet.update_cells(cell_list)
+        cells = get_cell_range(1, num_cols, self.start_row, self.start_col)
+        return cells
     
-    def write_full_table(self):
-        self.write_column_names()
-        self.write_data()
-
-
+    def get_data_cells(self):
+        num_rows = len(self.row_names)
+        num_cols = len(self.col_names)
+        
+        cells = get_cell_range(num_rows, num_cols, self.start_row+1, self.start_col)
+        return cells
+    
+    def write_table(self):
+        
+        write_to_gsheets(self.get_row_cells(), self.row_names)
+        write_to_gsheets(self.get_col_cells(), self.col_names)
+        write_to_gsheets(self.get_data_cells(), self.flat_data)
