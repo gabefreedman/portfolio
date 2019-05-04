@@ -12,6 +12,10 @@ s = yf.Ticker(s_name)
 # Dummy classes for Indices and Portfolios. Will fill in later
 
 class Index:
+    
+    def __repr__(self):
+        return 'Index object {}'.format(self.name)
+    
     def __init__(self, name):
         self.name = name
         self.tick_items = {}
@@ -56,8 +60,9 @@ def check_for_real_ticker(ind):
 
     for key in empty_tickers:
         ind.remove_company(key)
-    print('The following tickers did not exist and were not added to the Index')
-    print([item for item in empty_tickers])
+    if empty_tickers:
+        print('The following tickers did not exist and were not added to the Index')
+        print([item for item in empty_tickers])
 
 def build_index(name, companies=None):
     ''' Create custom Index object to store stock information

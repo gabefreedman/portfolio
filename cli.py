@@ -7,6 +7,8 @@ Created on Tue Apr 30 09:45:39 2019
 
 import re
 import sys
+import pickle
+import os
 
 from portfolio import build_index
 
@@ -92,7 +94,8 @@ def _build():
     print('Index {} created.'.format(ind_name))
 
 def _exist():
-    print('Nothing exists')
+    print('The following indices have already been created')
+    print(CACHED_INDICES)
 
 def _table():
     print('What table?')
@@ -102,18 +105,32 @@ def _help():
     for key, val in help_func.items():
         print('{} : {}\n'.format(key, val))
 
+def _load_pickle():
+    with open('cached_indices.pickle', 'rb') as f:
+        dat = pickle.load(f)
+    CACHED_INDICES.extend(dat)
+
+def _save():
+    with open('cached_indices.pickle', 'wb') as f:
+        pickle.dump(CACHED_INDICES, f)
+
 def _exit():
-    sys.exit()
+    _save()
+    sys.exit(0)
 
 commands = {'build' : _build,
             'exist' : _exist,
             'table' : _table,
-            'exit' : _exit, 
+            'exit' : _exit,
+            'save' : _save,
             'help' : _help}
 
 def main():
     print('\n---------STOCK INDEX CREATION AND TRACKING PROGRAM---------\n')
     print('Type \'help\' to show available commands')
+    
+    if os.path.isfile('cached_indices.pickle'):
+        _load_pickle()
     
     input1 = input('>>> ')
     while input1 != 'exit':
@@ -124,6 +141,8 @@ def main():
         commands[input1]()
         
         input1 = input('>>> ')
+    
+    _exit()
 
 if __name__ == '__main__':
     main()
