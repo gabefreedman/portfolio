@@ -53,7 +53,17 @@ def _build():
     change = 'n'
     while change in ['n', 'no']:
         ind_name = input('Enter a name for your index: ').upper()
+        if ind_name in [index.name for index in CACHED_INDICES]:
+            dupl_ind = [index.name for index in CACHED_INDICES].index(ind_name)
+            print('Index {} already exists.'.format(ind_name))
+            print('Enter a different name or type \'replace\' to replace Index')
+            replace_or_change = input('>>> ').lower()
+            if replace_or_change == 'replace':
+                CACHED_INDICES.pop(dupl_ind)
+            else:
+                ind_name = replace_or_change
         change = yes_no_prompt('Index name: {}. Is this correct? '.format(ind_name))
+                
 
     print('Enter ticker symbols to add to index')
     tickers = input('>>> ')

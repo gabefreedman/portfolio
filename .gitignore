@@ -10,6 +10,8 @@ __pycache__/
 *.csv
 *.json
 *.txt
+*.pickle
+fix_yahoo_finance.py
 
 # Distribution / packaging
 .Python
