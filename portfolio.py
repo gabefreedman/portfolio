@@ -38,7 +38,6 @@ class Index:
         df = pd.DataFrame(metadata).T
         df = df[columns]
         df = df.set_index('shortName')
-        df.to_csv('daily_financial_metrics.csv')
         return df
 
 class Portfolio:
@@ -48,6 +47,17 @@ class WatchList(Index):
     # Will fill in later
     # Contains all tickers to watch on daily basis, regardless if they are currently owned.
     pass
+
+def check_for_real_ticker(ind):
+    empty_tickers = []
+    for key, tick in ind.tick_items.items():
+        if not tick.info:
+            empty_tickers.append(key)
+
+    for key in empty_tickers:
+        ind.remove_company(key)
+    print('The following tickers did not exist and were not added to the Index')
+    print([item for item in empty_tickers])
 
 def build_index(name, companies=None):
     ''' Create custom Index object to store stock information
@@ -73,5 +83,7 @@ def build_index(name, companies=None):
         companies = list(set(companies))
         for cmp in companies:
             index.add_company(cmp)
+    
+    check_for_real_ticker(index)
     
     return index

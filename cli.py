@@ -8,11 +8,15 @@ Created on Tue Apr 30 09:45:39 2019
 import re
 import sys
 
+from portfolio import build_index
+
 help_func = {'build' : 'Build Index from input ticker symbols',
             'exist' : 'Prints existing Index objects being tracked',
             'table' : 'Pick existing Index and update table of financial metrics',
             'exit' : 'Exit program', 
             'help' : 'Display available commands'}
+
+CACHED_INDICES = []
 
 def yes_no_prompt(prompt):
     valid_answers = ['y', 'yes', 'n', 'no']
@@ -39,9 +43,6 @@ def parse_tickers(symbol):
     symbol = list(filter(None, symbol))
 
     return symbol
-
-def build_index():
-    print('Index has been built. Yay.')
 
 
 def _build():
@@ -86,8 +87,9 @@ def _build():
         print('To remove tickers type remove. Otherwise hit ENTER to build Index.')
         remove_or_build = input('>>> ')
 
-    build_index()
-    print('We\'re done here.')
+    ind = build_index(ind_name, tick_items)
+    CACHED_INDICES.append(ind)
+    print('Index {} created.'.format(ind_name))
 
 def _exist():
     print('Nothing exists')
