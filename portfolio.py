@@ -3,7 +3,6 @@
 # Global imports
 import pandas as pd
 import fix_yahoo_finance as yf
-import update_gsheets
 
 from update_gsheets import Table
 

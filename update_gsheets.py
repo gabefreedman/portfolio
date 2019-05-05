@@ -13,9 +13,9 @@ scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/au
 credentials = ServiceAccountCredentials.from_json_keyfile_name('finance-tracking-bd0390784e7a.json', scope)
 client = gspread.authorize(credentials)
 
-worksheet = client.open('Index Tracking').sheet1
+sh = client.open('Index Tracking')
 
-def write_to_gsheets(cell_range, data):
+def write_to_gsheets(cell_range, data, worksheet):
     cell_list = worksheet.range(cell_range)
     for i, cell in enumerate(cell_list):
         cell.value = data[i]
@@ -75,8 +75,13 @@ class Table:
         cells = get_cell_range(num_rows, num_cols, self.start_row+1, self.start_col)
         return cells
     
-    def write_table(self):
+    def set_worksheet(self, name):
+        worksheet = sh.add_worksheet(title=name, rows='100', cols='20')
+        return worksheet
+    
+    def write_table(self, name):
+        worksheet = self.set_worksheet(name)
         
-        write_to_gsheets(self.get_row_cells(), self.row_names)
-        write_to_gsheets(self.get_col_cells(), self.col_names)
-        write_to_gsheets(self.get_data_cells(), self.flat_data)
+        write_to_gsheets(self.get_row_cells(), self.row_names, worksheet)
+        write_to_gsheets(self.get_col_cells(), self.col_names, worksheet)
+        write_to_gsheets(self.get_data_cells(), self.flat_data, worksheet)
