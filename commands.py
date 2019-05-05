@@ -8,14 +8,16 @@ Created on Sat May  4 19:06:35 2019
 import sys
 import pickle
 
-from portfolio import build_index
+from portfolio import build_index, check_for_real_ticker
 from utils import yes_no_prompt, parse_tickers
 
 help_func = {'build' : 'Build Index from input ticker symbols',
             'exist' : 'Prints existing Index objects being tracked',
             'table' : 'Pick existing Index and update table of financial metrics',
+            'edit' : 'Edit Index object, add or remove tickers',
             'exit' : 'Exit program',
             'remove' : 'Delete Index object',
+            'save' : 'Save currently cached indices to file',
             'help' : 'Display available commands'}
 
 CACHED_INDICES = []
@@ -83,16 +85,67 @@ def _exist():
     print('The following indices have already been created')
     print(CACHED_INDICES)
 
+def _edit():
+    print('Pick which Index to edit.')
+    print(CACHED_IND_NAMES)
+    edit_index = input('>>> ').upper()
+    while edit_index not in CACHED_IND_NAMES:
+        print('Cannot edit Index {}. Does not exist'.format(edit_index))
+        print('Available indices: {}'.format(CACHED_IND_NAMES))
+        print('Enter name of Index or type \'exit\' to return to main prompt.')
+        edit_index = input('>>> ').upper()
+        if edit_index == 'EXIT':
+            return
+    
+    temp = CACHED_IND_NAMES.index(edit_index)
+    ind = CACHED_INDICES[temp]
+    print('Index name: {}'.format(ind.name))
+    print('Tickers: {}'.format(list(ind.tick_items.keys())))
+    print('Enter \'add\' or \'remove\' to edit ticker list')
+    print('Enter \'exit\' to return to main prompt.')
+    command = input('>>> ').lower()
+    while command not in ['add', 'remove', 'exit']:
+        print('Invalid command. Valid commands are \'add\', \'remove\', \'exit\'.')
+        command = input('>>> ').lower()
+    while command != 'exit':
+        if command == 'add':
+            add = input('Enter tickers to add: ')
+            add = parse_tickers(add)
+            for tck in add:
+                ind.add_company(tck)
+                check_for_real_ticker(ind)
+            print('Index name: {}'.format(ind.name))
+            print('Tickers: {}'.format(list(ind.tick_items.keys())))
+        elif command == 'remove':
+            remove = input('Enter tickers to remove: ')
+            remove = parse_tickers(remove)
+            for tck in remove:
+                if tck in list(ind.tick_items.keys()):
+                    ind.remove_company(tck)
+            print('Index name: {}'.format(ind.name))
+            print('Tickers: {}'.format(list(ind.tick_items.keys())))
+        else:
+            print('Invalid command. Valid commands are \'add\', \'remove\', \'exit\'.')
+        command = input('>>> ')
+
 def _table():
     print('Type the name of the Index to create / update table.')
-    print('Available indices: {}'.format(CACHED_IND_NAMES))
-    ind_to_tab = input('>>> ')
+    print('To update all tables at once, type \'all\'.')
+    ind_to_tab = input('>>> ').upper()
+    if ind_to_tab == 'ALL':
+        for ind in CACHED_INDICES:
+            ind.save_table()
+        return
     while ind_to_tab not in CACHED_IND_NAMES:
         print('Cannot remove Index {}. Does not exist'.format(ind_to_tab))
-        print('Type the name of the Index to create / update a table for')
-        print('or type \'exit\' to return to main prompt.')
+        print('Available indices: {}'.format(CACHED_IND_NAMES))
+        print('Enter name of Index or type \'exit\' to return to main prompt.')
         ind_to_tab = input('>>> ').upper()
-        if ind_to_tab == 'exit':
+        if ind_to_tab == 'ALL':
+            for ind in CACHED_INDICES:
+                ind.save_table()
+            return
+        elif ind_to_tab == 'EXIT':
             return
     
     table_index = CACHED_IND_NAMES.index(ind_to_tab)
@@ -100,7 +153,7 @@ def _table():
     print('Table successfully updated.')
 
 def _help():
-    print('--------AVAILABLE COMMANDS--------')
+    print('-----------AVAILABLE COMMANDS-----------\n')
     for key, val in help_func.items():
         print('{} : {}\n'.format(key, val))
 
@@ -141,6 +194,7 @@ def _exit():
 command_prompts = {'build' : _build,
             'exist' : _exist,
             'table' : _table,
+            'edit' : _edit,
             'exit' : _exit,
             'remove' : _remove,
             'save' : _save,

@@ -34,7 +34,7 @@ class Index:
         return metadata
     
     def main_metrics_table(self):
-        columns = ['shortName', 'marketCap',
+        columns = ['marketCap',
                    'forwardPE', 'trailingPE',
                    'trailingAnnualDividendRate',
                    'regularMarketDayRange', 'fiftyTwoWeekRange',
@@ -43,7 +43,8 @@ class Index:
         metadata = self.index_metadata()
         df = pd.DataFrame(metadata).T
         df = df[columns]
-        df = df.set_index('shortName')
+        df['Ticker'] = [key for key, _ in self.tick_items.items()]
+        df = df.set_index('Ticker')
         return df
     
     def save_table(self):
