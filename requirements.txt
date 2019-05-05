@@ -1,0 +1,10 @@
+numpy
+pandas
+os
+sys
+re
+pickle
+gspread
+oauth2client
+pyopenssl
+fix_yahoo_finance

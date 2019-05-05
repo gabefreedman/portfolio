@@ -9,7 +9,6 @@ __pycache__/
 # Data files
 *.csv
 *.json
-*.txt
 *.pickle
 fix_yahoo_finance.py
 
