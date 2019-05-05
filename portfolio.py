@@ -45,6 +45,11 @@ class Index:
         df = df[columns]
         df = df.set_index('shortName')
         return df
+    
+    def save_table(self):
+        data = self.main_metrics_table()
+        tab = Table(data)
+        tab.write_table(self.name)
 
 class Portfolio:
     pass

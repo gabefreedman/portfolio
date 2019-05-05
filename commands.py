@@ -84,7 +84,20 @@ def _exist():
     print(CACHED_INDICES)
 
 def _table():
-    print('What table?')
+    print('Type the name of the Index to create / update table.')
+    print('Available indices: {}'.format(CACHED_IND_NAMES))
+    ind_to_tab = input('>>> ')
+    while ind_to_tab not in CACHED_IND_NAMES:
+        print('Cannot remove Index {}. Does not exist'.format(ind_to_tab))
+        print('Type the name of the Index to create / update a table for')
+        print('or type \'exit\' to return to main prompt.')
+        ind_to_tab = input('>>> ').upper()
+        if ind_to_tab == 'exit':
+            return
+    
+    table_index = CACHED_IND_NAMES.index(ind_to_tab)
+    CACHED_INDICES[table_index].save_table()
+    print('Table successfully updated.')
 
 def _help():
     print('--------AVAILABLE COMMANDS--------')
@@ -103,7 +116,7 @@ def _remove():
     remove_name = input('>>> ').upper()
     while remove_name not in CACHED_IND_NAMES:
         print('Cannot remove Index {}. Does not exist'.format(remove_name))
-        print('Type the name of the Index you\'d like to remove,')
+        print('Type the name of the Index you\'d like to remove')
         print('or type \'exit\' to return to main prompt.')
         remove_name = input('>>> ').upper()
         if remove_name == 'exit':
