@@ -3,15 +3,60 @@
 Create custom indices, monitor stock data, and generate custom analyses and visualizations.
 
 * Dependencies
+- numpy
+- pandas
 - fix_yahoo_finance (Compatibility with updated Yahoo Finance API)
+- gspread (Move data to and from Google Sheets)
+- oauth2client
+- pyOpenSSL
 
 * Installation
 
-fix-yahoo-finance is available on pyPi, and can be installed by
+Download portfolio package by clicking Clone or Download, then Download ZIP. Extract files to directory and location of your choice.
+
+Next, create a virtual environment by moving to the project directory and running the following command
+
+
+(OS, Linux)
+#+BEGIN_SRC bash
+python3 -m venv env
+#+END_SRC
+
+(Windows)
+#+BEGIN_SRC bash
+python -m venv env
+#+END_SRC
+
+To activate the virtual environment run
+
+(OS, Linux)
+#+BEGIN_SRC bash
+source env/bin/activate
+#+END_SRC
+
+(Windows)
+#+BEGIN_SRC bash
+.\env\Scripts\activate
+#+END_SRC
+
+
+Finally, install dependencies by running
 
 #+BEGIN_SRC bash
-pip install fix_yahoo_finance --upgrade --no-cache-dir
+pip install -r requirements.txt
 #+END_SRC
-   
-* Features / Examples
-- (Fill in later)
+
+
+* Examples
+
+Navigate to project directory and activate virtual environment using steps above. To use the console tool, run the following
+
+#+BEGIN_SRC bash
+python cli.py
+#+END_SRC
+
+Once finished, deactivate the enfironment by running
+
+#+BEGIN_SRC bash
+deactivate
+#+END_SRC
