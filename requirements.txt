@@ -3,6 +3,7 @@ pandas
 os
 sys
 re
+requests
 pickle
 gspread
 oauth2client
