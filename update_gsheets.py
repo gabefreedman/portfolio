@@ -75,8 +75,19 @@ class Table:
         cells = get_cell_range(num_rows, num_cols, self.start_row+1, self.start_col)
         return cells
     
+    def _check_existing_worksheet(self, name):
+        wksheets = [wk.title for wk in sh.worksheets()]
+        if name in wksheets:
+            return True
+        else:
+            return False
+    
     def set_worksheet(self, name):
-        worksheet = sh.add_worksheet(title=name, rows='100', cols='20')
+        if not self._check_existing_worksheet(name):
+            worksheet = sh.add_worksheet(title=name, rows='100', cols='20')
+        else:
+            worksheet = sh.worksheet(name)
+        
         return worksheet
     
     def write_table(self, name):
