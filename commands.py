@@ -9,7 +9,7 @@ import sys
 import pickle
 
 from portfolio import build_index, check_for_real_ticker
-from utils import yes_no_prompt, parse_tickers
+from utils import yes_no_prompt, parse_tickers, parse_input
 
 help_func = {'build' : 'Build Index from input ticker symbols',
             'exist' : 'Prints existing Index objects being tracked',
@@ -129,28 +129,22 @@ def _edit():
         command = input('>>> ')
 
 def _table():
+    ''' Test docstring again
+    '''
     print('Type the name of the Index to create / update table.')
-    print('To update all tables at once, type \'all\'.')
-    ind_to_tab = input('>>> ').upper()
-    if ind_to_tab == 'ALL':
+    print('Available indices: {}'.format(CACHED_IND_NAMES))
+    response = parse_input('>>> ',
+                           lambda s: (s in CACHED_IND_NAMES) or (s == 'ALL'),
+                           'Index does not exist.', _table)
+    
+    if response == 'ALL':
         for ind in CACHED_INDICES:
             ind.save_table()
-        return
-    while ind_to_tab not in CACHED_IND_NAMES:
-        print('Cannot remove Index {}. Does not exist'.format(ind_to_tab))
-        print('Available indices: {}'.format(CACHED_IND_NAMES))
-        print('Enter name of Index or type \'exit\' to return to main prompt.')
-        ind_to_tab = input('>>> ').upper()
-        if ind_to_tab == 'ALL':
-            for ind in CACHED_INDICES:
-                ind.save_table()
-            return
-        elif ind_to_tab == 'EXIT':
-            return
-    
-    table_index = CACHED_IND_NAMES.index(ind_to_tab)
-    CACHED_INDICES[table_index].save_table()
-    print('Table successfully updated.')
+        print('Tables successfully updated.')
+    elif response:
+        idx = CACHED_IND_NAMES.index(response)
+        CACHED_INDICES[idx].save_table()
+        print('Table successfully updated.')
 
 def _help():
     print('-----------AVAILABLE COMMANDS-----------\n')
@@ -164,24 +158,22 @@ def _load_pickle():
     CACHED_IND_NAMES.extend(ind.name for ind in CACHED_INDICES)
 
 def _remove():
+    ''' Test docstring
+    Will provide additional commands here
+    '''
     print('Type the name of the Index you\'d like to remove.')
     print('Current indices are {}.'.format(CACHED_IND_NAMES))
-    remove_name = input('>>> ').upper()
-    while remove_name not in CACHED_IND_NAMES:
-        print('Cannot remove Index {}. Does not exist'.format(remove_name))
-        print('Type the name of the Index you\'d like to remove')
-        print('or type \'exit\' to return to main prompt.')
-        remove_name = input('>>> ').upper()
-        if remove_name == 'exit':
-            return
-    confirm = yes_no_prompt('Are you sure you want to delete {}? '.format(remove_name))
-    if confirm in ['y', 'yes']:
-        remove_index = CACHED_IND_NAMES.index(remove_name)
-        CACHED_INDICES.pop(remove_index)
-        CACHED_IND_NAMES.remove(remove_name)
-        print('Index {} has been removed. Current indices are {}.'.format(remove_name, CACHED_IND_NAMES))
-    else:
-        return
+    response = parse_input('>>> ', lambda s: s in CACHED_IND_NAMES,
+                           'Index does not exist.', _remove)
+
+    if response:
+        print('Are you sure you want to delete {}?'.format(response))
+        confirm = yes_no_prompt('>>> ')
+        if confirm:
+            remove_index = CACHED_IND_NAMES.index(response)
+            CACHED_INDICES.pop(remove_index)
+            CACHED_IND_NAMES.remove(response)
+            print('Index {} has been removed. Current indices are {}.'.format(response, CACHED_IND_NAMES))
 
 def _save():
     with open('cached_indices.pickle', 'wb') as f:
