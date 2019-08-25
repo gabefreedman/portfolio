@@ -12,17 +12,19 @@ def yes_no_prompt(prompt):
     
     while True:
         try:
-            answer = input(prompt)
+            answer = input(prompt).lower()
         except ValueError:
             print('Invalid input type. Strings only, please.')
             continue
 
-        if answer.lower() not in valid_answers:
-            print('Invalid answer, must be y/n response.\n')
+        if answer not in valid_answers:
+            print('Invalid answer, must be y/n response.')
             continue
         else:
             break
-    return answer.lower()
+    
+    if answer in ['y', 'yes']:
+        return True
 
 def parse_tickers(symbol):
     pattern = r',\s+|\s+'
@@ -49,4 +51,3 @@ def ask_question(prompt, validate, error, func):
             print(error)
             continue
         return response
-       
