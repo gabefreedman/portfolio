@@ -32,3 +32,21 @@ def parse_tickers(symbol):
     symbol = list(filter(None, symbol))
 
     return symbol
+
+def parse_input(prompt):
+    response = input(prompt).upper()
+    
+    if response == 'EXIT':
+        return
+    else:
+        return response
+
+def ask_question(prompt, validate, error, func):
+    
+    while True:
+        response = input(prompt)
+        if not validate(response):
+            print(error)
+            continue
+        return response
+       

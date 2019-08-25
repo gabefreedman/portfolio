@@ -9,7 +9,7 @@ import sys
 import pickle
 
 from portfolio import build_index, check_for_real_ticker
-from utils import yes_no_prompt, parse_tickers
+from utils import yes_no_prompt, parse_tickers, parse_input
 
 help_func = {'build' : 'Build Index from input ticker symbols',
             'exist' : 'Prints existing Index objects being tracked',
@@ -181,6 +181,13 @@ def _remove():
         CACHED_IND_NAMES.remove(remove_name)
         print('Index {} has been removed. Current indices are {}.'.format(remove_name, CACHED_IND_NAMES))
     else:
+        return
+
+def _rmv():
+    print('Type the name of the Index you\'d like to remove.')
+    print('Current indices are {}.\n'.format(CACHED_IND_NAMES))
+    response = parse_input('>>> ')
+    while response:
         return
 
 def _save():
