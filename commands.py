@@ -158,6 +158,13 @@ def _remove():
             print('Index {} has been removed.'.format(response))
             print('Current indices are {}.'.format(CACHED_IND_NAMES))
 
+def _rmv():
+    print('Type the name of the Index you\'d like to remove.')
+    print('Current indices are {}.\n'.format(CACHED_IND_NAMES))
+    response = parse_input('>>> ')
+    while response:
+        return
+
 def _save():
     with open('cached_indices.pickle', 'wb') as file:
         pickle.dump(CACHED_INDICES, file)

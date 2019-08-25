@@ -35,16 +35,19 @@ def parse_tickers(symbol):
 
     return symbol
 
-def parse_input(prompt, validate, error, func):
+def parse_input(prompt):
+    response = input(prompt).upper()
+    
+    if response == 'EXIT':
+        return
+    else:
+        return response
+
+def ask_question(prompt, validate, error, func):
+    
     while True:
-        response = input(prompt).upper()
-        if response == 'EXIT':
-            return
-        elif response == 'HELP':
-            print(func.__doc__)
-            continue
-        elif not validate(response):
+        response = input(prompt)
+        if not validate(response):
             print(error)
             continue
-        else:
-            return response
+        return response
