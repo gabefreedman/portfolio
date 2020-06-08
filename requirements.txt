@@ -5,7 +5,7 @@ chardet==3.0.4
 cryptography==2.6.1
 fix-yahoo-finance==0.1.33
 gspread==3.1.0
-httplib2==0.12.3
+httplib2==0.18.0
 idna==2.8
 multitasking==0.0.7
 numpy==1.16.3
